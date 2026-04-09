@@ -79,3 +79,5 @@ Vercel (set env vars). MongoDB Atlas recommended.
 - Optimized queries
 - Proper error handling
 
+## Aother
+- Sahil Yadav
