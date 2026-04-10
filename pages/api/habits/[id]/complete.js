@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken'
-import dbConnect from '../../../lib/mongoose'
-import Habit from '../../../lib/models/Habit'
-import Completion from '../../../lib/models/Completion'
-import { calculateStreak } from '../../../lib/utils'
-import { validateHabitComplete } from '../../../lib/validation'
+import dbConnect from '../../../../lib/mongoose'
+import Habit from '../../../../lib/models/Habit'
+import Completion from '../../../../lib/models/Completion'
+import { calculateStreak } from '../../../../lib/utils'
+import { validateHabitComplete } from '../../../../lib/validation'
 
 export default async function handler(req, res) {
   await dbConnect()

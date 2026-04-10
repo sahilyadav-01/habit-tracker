@@ -1,17 +1,30 @@
-# Habit Tracker Upgrade TODO
+# Habit Tracker Improvement Plan - Phase 1: UI/UX Polish & Optimizations
 
-## Progress Tracking
-- [x] Step 1: Repo Hygiene (.gitignore, rm node_modules, enhance README)
-- [x] Step 2: Add validation layer (/lib/validation.js)
-- [x] Step 3: Fix streak logic (/lib/utils.js) & optimize /api/habits
+## Completed: 5/12 ✅
 
-- [x] Step 4: Upgrade completion endpoint (/api/habits/[id]/complete.js)
+### Phase 1: Dashboard Enhancements (pages/dashboard.js)
+- [x] Add individual loading states for habits fetch and actions
+- [x] Implement optimistic updates for completeHabit (toggle visual feedback immediately)
+- [x] Add optimistic delete (remove card immediately, rollback on error)
+- [x] Enhance habit cards: Progress bar for consistency, last completed date, streak flame emoji
+- [x] Add sorting dropdown (by streak, consistency, name, recent)
+- [ ] Improve mobile responsiveness (stack cards, touch-friendly buttons)
+- [x] Add error toast notifications (replace inline error)
+- [ ] Create Stats modal for each habit (streak history, consistency chart)
 
-- [x] Step 5: Add dedicated streak endpoint (/api/habits/[id]/streak.js)
+### Phase 1: Global Improvements
+- [ ] Add persistent Navbar (Dashboard | Stats | Logout)
+- [ ] Add global loading spinner
 
-- [x] Step 6: Update models (timestamps)
+### Phase 1: Index Polish (pages/index.js)
+- [ ] Form validation (email/password patterns)
+- [ ] Loading state during auth
 
-- [ ] Step 7: Polish dashboard.js
-- [ ] Followup: npm install, npm run dev, test
+**Next Step: Polish mobile responsiveness in dashboard + Navbar component.**
 
-## Current: Step 3 - Streak fix + optimization
+### Next Phases (After Phase 1 approval)
+- Phase 2: Edit habits API + UI, History view
+- Phase 3: Charts (Recharts dep), Categories/Goals
+- Phase 4: TypeScript migration
+
+**Current Step: Update pages/dashboard.js with loading/optimistic updates + better cards.**
