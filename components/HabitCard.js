@@ -6,16 +6,17 @@ export default function HabitCard({ habit, onComplete, onDelete }) {
   const [localStreak, setLocalStreak] = useState(habit.streak)
   const [showProgress, setShowProgress] = useState(false)
 
-  const handleComplete = async () => {
-    setIsCompleting(true)
-    setLocalStreak(localStreak + 1) // Optimistic
-    try {
-      await onComplete(habit._id)
-    } catch (error) {
-      setLocalStreak(habit.streak) // Rollback
-    } finally {
-      setIsCompleting(false)
+  const handleComplete = () => {
+    setLocalStreak(localStreak + 1)
+    
+    // Congrats popup
+    if (localStreak >= 7) {
+      if (localStreak === 7) alert('⚡ First Week Streak! Amazing!')
+      else if (localStreak === 30) alert('🔥 30 Day Legend! Keep going!')
+      else if (localStreak % 7 === 0) alert(`🎉 ${localStreak} Day Streak! Incredible consistency!`)
     }
+    
+    setIsCompleting(false)
   }
 
   const handleDelete = async () => {
