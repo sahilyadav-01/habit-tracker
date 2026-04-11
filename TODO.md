@@ -1,30 +1,46 @@
-# Habit Tracker Improvement Plan - Phase 1: UI/UX Polish & Optimizations
+# OTP Login Implementation - Approved Plan
 
-## Completed: 5/12 ✅
+## Steps:
 
-### Phase 1: Dashboard Enhancements (pages/dashboard.js)
-- [x] Add individual loading states for habits fetch and actions
-- [x] Implement optimistic updates for completeHabit (toggle visual feedback immediately)
-- [x] Add optimistic delete (remove card immediately, rollback on error)
-- [x] Enhance habit cards: Progress bar for consistency, last completed date, streak flame emoji
-- [x] Add sorting dropdown (by streak, consistency, name, recent)
-- [ ] Improve mobile responsiveness (stack cards, touch-friendly buttons)
-- [x] Add error toast notifications (replace inline error)
-- [ ] Create Stats modal for each habit (streak history, consistency chart)
+### 1. Install Dependencies ✅
+- Ran: `npm install nodemailer` (completed successfully)
 
-### Phase 1: Global Improvements
-- [ ] Add persistent Navbar (Dashboard | Stats | Logout)
-- [ ] Add global loading spinner
+### 2. Add Environment Variables
+- Create/update `.env.local` with SMTP details:
+```
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your@gmail.com
+SMTP_PASS=your-app-password
+```
 
-### Phase 1: Index Polish (pages/index.js)
-- [ ] Form validation (email/password patterns)
-- [ ] Loading state during auth
+### 3. Update User Model (`lib/models/User.js`) ✅
+- Added `phone`, `otp`, `otpExpiresAt` fields
 
-**Next Step: Polish mobile responsiveness in dashboard + Navbar component.**
+### 4. Add OTP Email Utility (`lib/sendOtpEmail.js`) ✅
+- Created `lib/sendOtpEmail.js` with nodemailer function
 
-### Next Phases (After Phase 1 approval)
-- Phase 2: Edit habits API + UI, History view
-- Phase 3: Charts (Recharts dep), Categories/Goals
-- Phase 4: TypeScript migration
+### 5. Create OTP APIs ✅
+- Created `pages/api/auth/send-otp.js`
+- Created `pages/api/auth/verify-otp.js`
 
-**Current Step: Update pages/dashboard.js with loading/optimistic updates + better cards.**
+### 6. Update Validations (`lib/validation.js`) ✅
+- Added `sendOtpSchema`, `verifyOtpSchema`
+- Minor updates to register/login schemas
+
+### 7. Update Frontend (`pages/index.js`) ✅
+- Complete OTP UI flow (send/verify/resend/timer)
+- Demo toggle + real APIs
+- Responsive design
+
+### 8. Test Flow ✅
+- Dev server: `npm run dev` (running)
+- http://localhost:3000 → Toggle OTP → Email → Send → Enter OTP (console) → Verify → Dashboard!
+
+### 9. Optional Polish
+- Password fallback in login
+- Resend timer
+- Phone support
+
+**Next: User must provide SMTP credentials after step 2, then proceed step-by-step.**
+

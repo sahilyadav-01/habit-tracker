@@ -1,12 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Home() {
   const [isLogin, setIsLogin] = useState(true)
+  const [useOtp, setUseOtp] = useState(false)
+  const [otpStep, setOtpStep] = useState('email') // 'email', 'otp'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
+  const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [demoMode, setDemoMode] = useState(true)
+  const [otpTimer, setOtpTimer] = useState(300)
+  const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    if (otpStep === 'otp' && otpTimer > 0) {
+      const timer = setTimeout(() => setOtpTimer(otpTimer - 1), 1000)
+      return () => clearTimeout(timer)
+    } else if (otpTimer === 0) {
+      setMessage('OTP expired. Request new one.')
+    }
+  }, [otpStep, otpTimer])
 
   const handleGoogleLogin = async (e) => {
     e.preventDefault()
@@ -21,25 +36,115 @@ export default function Home() {
     window.location.href = '/dashboard'
   }
 
-  const handleSubmit = async (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError('')
-    
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    if (!isLogin && !name.trim()) {
-      setError('Name is required for new accounts')
+
+    try {
+      const res = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.message)
+      } else {
+        setMessage(data.message)
+        setOtpStep('otp')
+        setOtpTimer(300)
+      }
+    } catch (err) {
+      setError('Network error')
+    } finally {
       setLoading(false)
+    }
+  }
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    try {
+      const res = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.message)
+      } else {
+        localStorage.setItem('token', data.token)
+        window.location.href = '/dashboard'
+      }
+    } catch (err) {
+      setError('Network error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    if (demoMode) {
+      // Demo mode
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      localStorage.setItem('token', isLogin ? 'email-login-token' : 'email-register-token')
+      localStorage.setItem('name', name)
+      localStorage.setItem('provider', 'email')
+      localStorage.setItem('userType', 'personal')
+      window.location.href = '/dashboard'
       return
     }
-    
-    localStorage.setItem('token', isLogin ? 'email-login-token' : 'email-register-token')
-    localStorage.setItem('name', name)
-    localStorage.setItem('provider', 'email')
-    localStorage.setItem('userType', 'personal')
-    
-    window.location.href = '/dashboard'
+
+    // Real API calls (implement register/login APIs properly later)
+    const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register'
+    const body = isLogin ? { email, password } : { email, password, name }
+
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.message)
+      } else {
+        localStorage.setItem('token', data.token)
+        window.location.href = '/dashboard'
+      }
+    } catch (err) {
+      setError('Network error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const toggleOtpMode = () => {
+    setUseOtp(!useOtp)
+    setOtpStep('email')
+    setOtp('')
+    setError('')
+  }
+
+  const requestNewOtp = () => {
+    setOtpStep('email')
+    setOtp('')
+    setOtpTimer(300)
+    setMessage('')
   }
 
   return (
@@ -86,84 +191,180 @@ export default function Home() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="px-4 bg-white/80 backdrop-blur-sm text-gray-500 tracking-wider">
-                or {isLogin ? 'sign in' : 'create account'} with email
+                or continue with email
               </span>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6 mt-8">
-            {!isLogin && (
+          {otpStep === 'email' && (
+            <form onSubmit={useOtp ? handleSendOtp : handlePasswordSubmit} className="space-y-6 mt-8">
+              {!isLogin && (
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all text-lg shadow-inner"
+                    required={!isLogin}
+                    disabled={loading}
+                  />
+                </div>
+              )}
+              
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Full Name
+                  Email
                 </label>
                 <input
-                  type="text"
-                  placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all text-lg shadow-inner"
                   required
                   disabled={loading}
                 />
               </div>
-            )}
-            
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all text-lg shadow-inner"
-                required
-                disabled={loading}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Password
-              </label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all text-lg shadow-inner"
-                required
-                disabled={loading}
-              />
-            </div>
-
-            {error && (
-              <div className="p-4 bg-red-50 border-2 border-red-200 rounded-2xl text-red-800 font-semibold flex items-center gap-3">
-                <span className="text-xl">⚠️</span>
-                {error}
-              </div>
-            )}
-
-            <button 
-              type="submit" 
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-black py-5 px-8 rounded-3xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300 disabled:cursor-not-allowed text-xl flex items-center justify-center gap-3"
-            >
-              {loading ? (
-                <>
-                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  {isLogin ? 'Signing In...' : 'Creating Account...'}
-                </>
-              ) : (
-                <>
-                  <span>🚀</span>
-                  {isLogin ? 'Sign In' : 'Create Account'}
-                </>
+              
+              {!useOtp && (
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all text-lg shadow-inner"
+                    required={!useOtp}
+                    disabled={loading}
+                  />
+                </div>
               )}
-            </button>
-          </form>
+
+              {error && (
+                <div className="p-4 bg-red-50 border-2 border-red-200 rounded-2xl text-red-800 font-semibold flex items-center gap-3">
+                  <span className="text-xl">⚠️</span>
+                  {error}
+                </div>
+              )}
+
+              {message && (
+                <div className="p-4 bg-emerald-50 border-2 border-emerald-200 rounded-2xl text-emerald-800 font-semibold flex items-center gap-3">
+                  <span className="text-xl">📧</span>
+                  {message}
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <label className="flex items-center gap-2 text-sm">
+                  <input 
+                    type="checkbox" 
+                    checked={demoMode}
+                    onChange={(e) => setDemoMode(e.target.checked)}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                    disabled={loading}
+                  />
+                  <span className="text-gray-700">Demo Mode</span>
+                </label>
+              </div>
+
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-black py-5 px-8 rounded-3xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300 disabled:cursor-not-allowed text-xl flex items-center justify-center gap-3"
+              >
+                {loading ? (
+                  <>
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    {useOtp ? 'Sending OTP...' : (isLogin ? 'Sign In' : 'Create Account')}
+                  </>
+                ) : (
+                  <>
+                    <span>{useOtp ? '📱' : '🚀'}</span>
+                    {useOtp ? 'Send OTP' : (isLogin ? 'Sign In' : 'Create Account')}
+                  </>
+                )}
+              </button>
+
+              <div className="text-center pt-4">
+                <button 
+                  type="button"
+                  onClick={toggleOtpMode}
+                  className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                  disabled={loading}
+                >
+                  {useOtp ? 'Use Password Instead' : 'Use OTP Login 📱'}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {otpStep === 'otp' && (
+            <form onSubmit={handleVerifyOtp} className="space-y-6 mt-8">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Enter OTP (sent to {email})
+                </label>
+                <input
+                  type="text"
+                  placeholder="123456"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                  maxLength={6}
+                  className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-emerald-200 focus:border-emerald-400 transition-all text-2xl font-mono tracking-widest text-center shadow-inner bg-gradient-to-r from-emerald-50 to-teal-50"
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="text-center text-sm text-gray-600">
+                {otpTimer > 0 ? `Resend in ${otpTimer}s` : 'Request new OTP'}
+              </div>
+
+              {error && (
+                <div className="p-4 bg-red-50 border-2 border-red-200 rounded-2xl text-red-800 font-semibold flex items-center gap-3">
+                  <span className="text-xl">⚠️</span>
+                  {error}
+                </div>
+              )}
+
+              <button 
+                type="submit" 
+                disabled={loading || otpTimer === 0}
+                className="w-full bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-black py-5 px-8 rounded-3xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300 disabled:cursor-not-allowed text-xl flex items-center justify-center gap-3"
+              >
+                {loading ? (
+                  <>
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Verifying...
+                  </>
+                ) : (
+                  <>
+                    <span>🔑</span>
+                    Verify OTP
+                  </>
+                )}
+              </button>
+
+              {otpTimer === 0 && (
+                <div className="text-center">
+                  <button 
+                    type="button"
+                    onClick={requestNewOtp}
+                    className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                  >
+                    Resend OTP
+                  </button>
+                </div>
+              )}
+            </form>
+          )}
 
           <div className="mt-8 pt-8 border-t border-gray-200 text-center">
             <button 
@@ -175,11 +376,12 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="mt-8 p-4 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-2xl border-2 border-emerald-200 text-emerald-800 font-semibold text-sm text-center">
-            ✨ Demo - All logins work instantly
+          <div className="mt-6 p-4 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-2xl border-2 border-emerald-200 text-emerald-800 font-semibold text-sm text-center">
+            ✨ Demo Mode ON - Works instantly! Toggle for real APIs
           </div>
         </div>
       </div>
     </div>
   )
 }
+

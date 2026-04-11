@@ -1,36 +1,46 @@
-import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import dbConnect from '../../../lib/mongoose'
-import User from '../../../lib/models/User'
+import bcrypt from 'bcryptjs'
+import { z } from 'zod'
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+})
+
+let mockUsers = new Map()
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' })
   }
 
-  await dbConnect()
-
-  const { email, password } = req.body
-
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' })
-  }
-
   try {
-    const user = await User.findOne({ email })
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' })
+    const validation = loginSchema.safeParse(req.body)
+    if (!validation.success) {
+      return res.status(400).json({ message: 'Invalid email/password' })
     }
 
-    const isValid = await bcrypt.compare(password, user.password)
+    const { email, password } = req.body
+
+    // Mock login
+    const userData = mockUsers.get(email)
+    if (!userData) {
+      return res.status(400).json({ message: 'User not found. Register first.' })
+    }
+
+    const isValid = await bcrypt.compare(password, userData.password)
     if (!isValid) {
       return res.status(400).json({ message: 'Invalid credentials' })
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+    const token = jwt.sign({ userId: `demo_${Date.now()}`, email }, 'demo-secret', { expiresIn: '7d' })
+
+    console.log(`✅ Password login for ${email}`)
 
     res.status(200).json({ token })
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error' })
+    console.error('Login error:', error)
+    res.status(500).json({ message: 'Server error' })
   }
 }
+
