@@ -1,3 +1,134 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Premium Animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(236, 72, 153, 0.6), 0 0 60px rgba(236, 72, 153, 0.3); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes ripple {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* Premium Colors */
+:root {
+  --premium-gold: 255 215 0;
+  --premium-platinum: 229 231 235;
+  --premium-purple: 147 51 234;
+  --premium-pink: 236 72 153;
+}
+
+.premium-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.premium-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+.premium-float-slow {
+  animation: float 6s ease-in-out infinite;
+}
+.premium-float-med {
+  animation: float 4s ease-in-out infinite reverse;
+}
+.premium-float-fast {
+  animation: float 3s ease-in-out infinite;
+}
+
+.premium-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-ripple:active::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ripple 0.6s linear;
+}
+
+.bg-premium-gold {
+  background: linear-gradient(135deg, rgb(var(--premium-gold) / 0.9), #D4AF37, rgb(var(--premium-purple) / 0.8));
+}
+
+.hover\\:bg-premium-gold-hover:hover {
+  background: linear-gradient(135deg, #FFD700, #FFA500, rgb(var(--premium-purple)));
+}
+
+.text-premium-gold {
+  background: linear-gradient(135deg, rgb(var(--premium-gold)), #D4AF37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shadow-premium {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.shadow-premium-glow {
+  box-shadow: 0 25px 50px -12px rgba(236, 72, 153, 0.3), 0 0 30px rgba(236, 72, 153, 0.2);
+}
+
+.border-premium {
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  background: linear-gradient(white, rgba(255, 215, 0, 0.05));
+}
+
+/* Premium Badge */
+.premium-badge {
+  background: linear-gradient(135deg, rgb(var(--premium-gold)), #D4AF37);
+  color: #1F2937;
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.premium-badge:hover::before {
+  left: 100%;
+}
+
+/* Glass Premium Card */
+.glass-premium {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}

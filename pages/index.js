@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 export default function Home() {
   const [isLogin, setIsLogin] = useState(true)
   const [useOtp, setUseOtp] = useState(false)
-  const [otpStep, setOtpStep] = useState('email') // 'email', 'otp'
+  const [otpStep, setOtpStep] = useState('email') 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
@@ -97,7 +97,6 @@ export default function Home() {
     setError('')
 
     if (demoMode) {
-      // Demo mode
       await new Promise(resolve => setTimeout(resolve, 1500))
       localStorage.setItem('token', isLogin ? 'email-login-token' : 'email-register-token')
       localStorage.setItem('name', name)
@@ -107,7 +106,6 @@ export default function Home() {
       return
     }
 
-    // Real API calls (implement register/login APIs properly later)
     const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register'
     const body = isLogin ? { email, password } : { email, password, name }
 
@@ -148,240 +146,269 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4 md:p-8">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-12">
-          <div className="text-6xl mb-4">📊</div>
-          <h1 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent drop-shadow-lg mb-2">
-            Habit Tracker Pro
-          </h1>
-          <p className="text-lg text-gray-600 font-medium">Welcome {isLogin ? 'back' : 'aboard'}</p>
-        </div>
-
-        <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl border border-gray-200 p-8 md:p-10">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              {isLogin ? 'Welcome Back' : 'Create Account'}
-            </h2>
-            <p className="text-gray-600">
-              {isLogin ? 'Sign in to continue' : 'Join and start tracking habits today'}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/30 to-pink-900/30 relative overflow-hidden">
+      {/* Premium Animated Particles */}
+      <div className="absolute inset-0">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 rounded-full blur-3xl animate-float-slow"></div>
+        <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-500/20 rounded-full blur-3xl animate-float-med" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-r from-pink-400/20 to-yellow-400/20 rounded-full blur-3xl animate-float-fast" style={{animationDelay: '2s'}}></div>
+      </div>
+      
+      <div className="relative z-10 flex items-center justify-center p-4 md:p-8 min-h-screen">
+        <div className="w-full max-w-md">
+          
+          {/* Premium Hero Section */}
+          <div className="text-center mb-12 glass-premium rounded-3xl p-8 shadow-premium-glow">
+            <div className="premium-badge mb-6 inline-flex items-center gap-2 shadow-lg mx-auto">
+              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+              PRO EDITION
+            </div>
+            <div className="text-6xl mb-6 premium-glow">🚀</div>
+            <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-500 bg-clip-text text-transparent drop-shadow-2xl mb-4 tracking-tight">
+              Habit Tracker Pro
+            </h1>
+            <p className="text-xl text-white/90 font-semibold bg-white/10 backdrop-blur-sm px-6 py-3 rounded-2xl inline-block shadow-lg">
+              Premium Experience Awaits
             </p>
-          </div>
-
-          <div className="space-y-4 mb-8">
-            <button 
-              onClick={handleGoogleLogin}
-              type="button"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-4 px-8 rounded-3xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-3 text-lg"
-            >
-              <svg className="w-6 h-6" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              Continue with Google
-            </button>
-          </div>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="px-4 bg-white/80 backdrop-blur-sm text-gray-500 tracking-wider">
-                or continue with email
-              </span>
+            <div className="mt-6 grid grid-cols-3 gap-2 text-xs text-white/80 font-mono tracking-wider">
+              <span>• Unlimited Habits</span>
+              <span>• Family Sync</span>
+              <span>• AI Insights</span>
             </div>
           </div>
 
-          {otpStep === 'email' && (
-            <form onSubmit={useOtp ? handleSendOtp : handlePasswordSubmit} className="space-y-6 mt-8">
-              {!isLogin && (
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Full Name
+          {/* Premium Glass Card */}
+          <div className="glass-premium rounded-3xl shadow-premium p-10 relative border-premium">
+            
+            <div className="mb-10">
+              <h2 className="text-3xl font-black bg-gradient-to-r from-white to-gray-200 bg-clip-text mb-3 shadow-lg">
+                {isLogin ? 'Welcome Back' : 'Join Pro'}
+              </h2>
+              <p className="text-gray-300 text-lg font-medium">
+                {isLogin ? 'Access premium dashboard instantly' : 'Unlock unlimited premium features'}
+              </p>
+            </div>
+
+            {/* Google Pro Button */}
+            <div className="space-y-4 mb-10">
+              <button 
+                onClick={handleGoogleLogin}
+                type="button"
+                disabled={loading}
+                className="premium-ripple w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-gray-900 font-black py-5 px-8 rounded-3xl shadow-premium text-xl flex items-center justify-center gap-3 premium-shimmer hover:shadow-premium-glow transform hover:-translate-y-2 hover:scale-[1.02] transition-all duration-500 disabled:opacity-50"
+              >
+                <span className="w-8 h-8 bg-white rounded-2xl shadow-lg flex items-center justify-center font-bold text-2xl">
+                  G
+                </span>
+                Continue with Google Pro
+              </button>
+            </div>
+
+            {/* Premium Divider */}
+            <div className="relative mb-10">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-white/20"></div>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase tracking-wider">
+                <span className="px-6 bg-white/10 backdrop-blur-sm text-gray-300 rounded-full border border-white/20 py-2 font-mono">
+                  or Premium Email
+                </span>
+              </div>
+            </div>
+
+            {otpStep === 'email' && (
+              <form onSubmit={useOtp ? handleSendOtp : handlePasswordSubmit} className="space-y-6">
+                {!isLogin && (
+                  <div className="relative group">
+                    <input
+                      type="text"
+                      placeholder=" "
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="premium-ripple w-full p-5 border-2 border-transparent rounded-3xl focus:border-yellow-400 bg-white/10 backdrop-blur-md text-white placeholder-gray-400 text-lg font-semibold shadow-premium peer transition-all focus:ring-4 focus:ring-yellow-400/50"
+                      required={!isLogin}
+                      disabled={loading}
+                    />
+                    <label className="absolute left-5 top-5 text-gray-400 transition-all duration-300 -translate-y-2 scale-75 bg-gray-900 px-2 peer-focus:text-yellow-300 text-sm font-bold peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-placeholder-shown:scale-100">
+                      Full Name
+                    </label>
+                  </div>
+                )}
+                
+                <div className="relative group">
+                  <input
+                    type="email"
+                    placeholder=" "
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="premium-ripple w-full p-5 border-2 border-transparent rounded-3xl focus:border-yellow-400 bg-white/10 backdrop-blur-md text-white placeholder-gray-400 text-lg font-semibold shadow-premium peer transition-all focus:ring-4 focus:ring-yellow-400/50"
+                    required
+                    disabled={loading}
+                  />
+                  <label className="absolute left-5 top-5 text-gray-400 transition-all duration-300 -translate-y-2 scale-75 bg-gray-900 px-2 peer-focus:text-yellow-300 text-sm font-bold peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-placeholder-shown:scale-100">
+                    Email Address
+                  </label>
+                </div>
+                
+                {!useOtp && (
+                  <div className="relative group">
+                    <input
+                      type="password"
+                      placeholder=" "
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="premium-ripple w-full p-5 border-2 border-transparent rounded-3xl focus:border-yellow-400 bg-white/10 backdrop-blur-md text-white placeholder-gray-400 text-lg font-semibold shadow-premium peer transition-all focus:ring-4 focus:ring-yellow-400/50"
+                      required={!useOtp}
+                      disabled={loading}
+                    />
+                    <label className="absolute left-5 top-5 text-gray-400 transition-all duration-300 -translate-y-2 scale-75 bg-gray-900 px-2 peer-focus:text-yellow-300 text-sm font-bold peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-placeholder-shown:scale-100">
+                      Password
+                    </label>
+                  </div>
+                )}
+
+                {error && (
+                  <div className="p-5 bg-red-500/20 border border-red-400/50 backdrop-blur-sm rounded-3xl text-red-100 font-semibold flex items-center gap-3 animate-pulse">
+                    <span className="text-2xl shrink-0">⚠️</span>
+                    {error}
+                  </div>
+                )}
+
+                {message && (
+                  <div className="p-5 bg-emerald-500/20 border border-emerald-400/50 backdrop-blur-sm rounded-3xl text-emerald-100 font-semibold flex items-center gap-3 premium-shimmer">
+                    <span className="text-2xl shrink-0">📧</span>
+                    {message}
+                  </div>
+                )}
+
+                <div className="flex items-center pt-2">
+                  <label className="flex items-center gap-3 text-sm text-gray-300 bg-gray-900/80 px-4 py-2 rounded-xl backdrop-blur-sm border border-gray-600/50">
+                    <input 
+                      type="checkbox" 
+                      checked={demoMode}
+                      onChange={(e) => setDemoMode(e.target.checked)}
+                      className="w-5 h-5 accent-yellow-400 rounded-lg shadow-md focus:ring-yellow-400 bg-gray-800 border-gray-600"
+                      disabled={loading}
+                    />
+                    <span>Demo Mode (Instant Access)</span>
+                  </label>
+                </div>
+
+                <button 
+                  type="submit"
+                  disabled={loading}
+                  className="premium-ripple w-full bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-600 hover:from-yellow-600 hover:via-orange-600 hover:to-yellow-700 text-gray-900 font-black py-6 px-10 rounded-3xl shadow-premium-lg text-xl flex items-center justify-center gap-3 premium-shimmer hover:shadow-premium-glow transform hover:-translate-y-1 hover:scale-[1.02] transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-8 h-8 border-3 border-gray-900/50 border-t-yellow-400 rounded-full animate-spin shadow-xl" />
+                      {useOtp ? 'Sending Pro OTP...' : (isLogin ? 'Sign In Premium' : 'Create Pro Account')}
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-2xl">{useOtp ? '📱' : '⭐'}</span>
+                      {useOtp ? 'Send Pro OTP' : (isLogin ? 'Pro Sign In' : 'Create Pro Account')}
+                    </>
+                  )}
+                </button>
+
+                <div className="text-center pt-6">
+                  <button 
+                    type="button"
+                    onClick={toggleOtpMode}
+                    className="text-yellow-400 hover:text-yellow-300 font-bold text-lg transition-all duration-300 hover:scale-105 bg-gray-900/50 backdrop-blur-sm px-6 py-3 rounded-2xl border border-yellow-400/30 hover:border-yellow-400 shadow-lg hover:shadow-premium-glow premium-shimmer"
+                    disabled={loading}
+                  >
+                    {useOtp ? 'Use Password' : 'Pro OTP Login 📱'}
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {otpStep === 'otp' && (
+              <form onSubmit={handleVerifyOtp} className="space-y-6">
+                <div className="space-y-4">
+                  <label className="block text-xl font-black text-yellow-300 text-center tracking-widest mb-6">
+                    Pro OTP Verification
                   </label>
                   <input
                     type="text"
-                    placeholder="John Doe"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all text-lg shadow-inner"
-                    required={!isLogin}
+                    placeholder="Enter 6-digit code"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                    maxLength={6}
+                    className="premium-ripple w-full p-8 border-2 border-transparent rounded-3xl focus:border-yellow-400 bg-gradient-to-r from-yellow-500/5 to-purple-500/5 backdrop-blur-xl text-3xl font-mono tracking-[1em] text-center font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-400 to-purple-500 shadow-premium hover:shadow-premium-glow transition-all focus:ring-4 focus:ring-yellow-400/40"
+                    required
                     disabled={loading}
                   />
                 </div>
-              )}
-              
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all text-lg shadow-inner"
-                  required
-                  disabled={loading}
-                />
-              </div>
-              
-              {!useOtp && (
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all text-lg shadow-inner"
-                    required={!useOtp}
-                    disabled={loading}
-                  />
+
+                <div className="text-center text-sm text-gray-400 font-mono tracking-wider bg-gray-900/50 px-8 py-3 rounded-2xl backdrop-blur-sm border border-gray-600/30">
+                  Expires in <span className="text-yellow-400 font-mono font-bold text-xl ml-1">
+                    {Math.floor(otpTimer / 60)}:{(otpTimer % 60).toString().padStart(2, '0')}
+                  </span>
                 </div>
-              )}
 
-              {error && (
-                <div className="p-4 bg-red-50 border-2 border-red-200 rounded-2xl text-red-800 font-semibold flex items-center gap-3">
-                  <span className="text-xl">⚠️</span>
-                  {error}
-                </div>
-              )}
-
-              {message && (
-                <div className="p-4 bg-emerald-50 border-2 border-emerald-200 rounded-2xl text-emerald-800 font-semibold flex items-center gap-3">
-                  <span className="text-xl">📧</span>
-                  {message}
-                </div>
-              )}
-
-              <div className="flex gap-3 pt-2">
-                <label className="flex items-center gap-2 text-sm">
-                  <input 
-                    type="checkbox" 
-                    checked={demoMode}
-                    onChange={(e) => setDemoMode(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                    disabled={loading}
-                  />
-                  <span className="text-gray-700">Demo Mode</span>
-                </label>
-              </div>
-
-              <button 
-                type="submit" 
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-black py-5 px-8 rounded-3xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300 disabled:cursor-not-allowed text-xl flex items-center justify-center gap-3"
-              >
-                {loading ? (
-                  <>
-                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    {useOtp ? 'Sending OTP...' : (isLogin ? 'Sign In' : 'Create Account')}
-                  </>
-                ) : (
-                  <>
-                    <span>{useOtp ? '📱' : '🚀'}</span>
-                    {useOtp ? 'Send OTP' : (isLogin ? 'Sign In' : 'Create Account')}
-                  </>
+                {error && (
+                  <div className="p-5 bg-red-500/20 border border-red-400/50 backdrop-blur-sm rounded-3xl text-red-100 font-semibold flex items-center gap-3 animate-pulse">
+                    <span className="text-2xl shrink-0">⚠️</span>
+                    {error}
+                  </div>
                 )}
-              </button>
 
-              <div className="text-center pt-4">
                 <button 
-                  type="button"
-                  onClick={toggleOtpMode}
-                  className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
-                  disabled={loading}
+                  type="submit"
+                  disabled={loading || otpTimer === 0}
+                  className="premium-ripple w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black py-7 px-12 rounded-3xl shadow-premium-lg text-xl flex items-center justify-center gap-3 premium-shimmer hover:shadow-premium-glow transform hover:-translate-y-1 hover:scale-[1.02] transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {useOtp ? 'Use Password Instead' : 'Use OTP Login 📱'}
+                  {loading ? (
+                    <>
+                      <div className="w-8 h-8 border-3 border-white/70 border-t-yellow-400 rounded-full animate-spin shadow-xl" />
+                      Verifying Pro Access...
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-2xl">🔑</span>
+                      Unlock Premium Dashboard
+                    </>
+                  )}
                 </button>
-              </div>
-            </form>
-          )}
 
-          {otpStep === 'otp' && (
-            <form onSubmit={handleVerifyOtp} className="space-y-6 mt-8">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Enter OTP (sent to {email})
-                </label>
-                <input
-                  type="text"
-                  placeholder="123456"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
-                  maxLength={6}
-                  className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-emerald-200 focus:border-emerald-400 transition-all text-2xl font-mono tracking-widest text-center shadow-inner bg-gradient-to-r from-emerald-50 to-teal-50"
-                  required
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="text-center text-sm text-gray-600">
-                {otpTimer > 0 ? `Resend in ${otpTimer}s` : 'Request new OTP'}
-              </div>
-
-              {error && (
-                <div className="p-4 bg-red-50 border-2 border-red-200 rounded-2xl text-red-800 font-semibold flex items-center gap-3">
-                  <span className="text-xl">⚠️</span>
-                  {error}
-                </div>
-              )}
-
-              <button 
-                type="submit" 
-                disabled={loading || otpTimer === 0}
-                className="w-full bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-black py-5 px-8 rounded-3xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300 disabled:cursor-not-allowed text-xl flex items-center justify-center gap-3"
-              >
-                {loading ? (
-                  <>
-                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Verifying...
-                  </>
-                ) : (
-                  <>
-                    <span>🔑</span>
-                    Verify OTP
-                  </>
+                {otpTimer === 0 && (
+                  <div className="text-center">
+                    <button 
+                      type="button"
+                      onClick={requestNewOtp}
+                      className="text-yellow-400 hover:text-yellow-300 font-bold text-lg transition-all duration-300 hover:scale-105 bg-gray-900/50 backdrop-blur-sm px-8 py-4 rounded-2xl border border-yellow-400/30 hover:border-yellow-400 shadow-lg hover:shadow-premium-glow premium-shimmer"
+                    >
+                      🔄 Resend Pro OTP
+                    </button>
+                  </div>
                 )}
+              </form>
+            )}
+
+            {/* Toggle Auth Mode */}
+            <div className="mt-12 pt-10 border-t border-white/20 text-center">
+              <button 
+                onClick={() => setIsLogin(!isLogin)}
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-yellow-300 hover:text-yellow-200 font-black text-xl px-8 py-4 rounded-3xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-premium-glow premium-shimmer w-full"
+                disabled={loading}
+              >
+                {isLogin ? '➕ Create New Pro Account' : '← Already Pro? Sign In'}
               </button>
+            </div>
 
-              {otpTimer === 0 && (
-                <div className="text-center">
-                  <button 
-                    type="button"
-                    onClick={requestNewOtp}
-                    className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
-                  >
-                    Resend OTP
-                  </button>
-                </div>
-              )}
-            </form>
-          )}
-
-          <div className="mt-8 pt-8 border-t border-gray-200 text-center">
-            <button 
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-blue-600 hover:text-blue-700 font-semibold text-lg transition-colors"
-              disabled={loading}
-            >
-              {isLogin ? 'Create new account →' : '← Already have account? Sign in'}
-            </button>
-          </div>
-
-          <div className="mt-6 p-4 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-2xl border-2 border-emerald-200 text-emerald-800 font-semibold text-sm text-center">
-            ✨ Demo Mode ON - Works instantly! Toggle for real APIs
+            {/* Pro Status Bar */}
+            <div className="mt-8 p-5 glass-premium rounded-2xl border-premium text-center shadow-premium">
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-yellow-400 text-lg font-black tracking-wider">⭐ PRO</span>
+                <span className="text-gray-400 text-sm font-mono">Demo Mode • Instant Access Enabled</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   )
 }
-
