@@ -1,6 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer utilities {
+  .animate-float-slow { animation: float 6s ease-in-out infinite; }
+  .animate-float-med { animation: float 4s ease-in-out infinite reverse; }
+  .animate-float-fast { animation: float 3s ease-in-out infinite; }
+}
 
 /* Premium Animations */
 @keyframes shimmer {
