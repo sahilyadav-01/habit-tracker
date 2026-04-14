@@ -58,7 +58,7 @@ export default function FamilyDashboard() {
 
   return (
     <>
-      <ReminderPopup habits={habits} onDismiss={completeHabit} />
+      <ReminderPopup habits={habits} onDismiss={completeHabit} theme="family" />
       <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 p-4 md:p-8">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-12">
@@ -148,4 +148,3 @@ export default function FamilyDashboard() {
     </>
   )
 }
-

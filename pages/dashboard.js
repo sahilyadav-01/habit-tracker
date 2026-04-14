@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import Navbar from '../components/Navbar'
 import HabitCard from '../components/HabitCard'
@@ -62,7 +61,7 @@ export default function PersonalDashboard() {
 
   return (
     <>
-      <ReminderPopup habits={habits} onDismiss={completeHabit} />
+      <ReminderPopup habits={habits} onDismiss={completeHabit} theme="personal" />
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 p-4 md:p-8">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-12">
