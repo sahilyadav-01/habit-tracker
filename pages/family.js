@@ -2,6 +2,9 @@ import React, { useState, useEffect, useMemo } from 'react'
 import HabitCard from '../components/HabitCard'
 import ReminderPopup from '../components/ReminderPopup'
 import HabitSuggestion from '../components/HabitSuggestion'
+import Navbar from '../components/Navbar'
+import { useRouter } from 'next/router'
+import { getHabits, createHabit, completeHabit, deleteHabit } from '../lib/api'
 import { familyHabits } from '../components/DemoData'
 
 export default function FamilyDashboard() {
@@ -9,9 +12,23 @@ export default function FamilyDashboard() {
   const [newHabit, setNewHabit] = useState('')
   const [sortBy, setSortBy] = useState('streak')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
-    setHabits(familyHabits.map(h => ({ ...h, family: true, members: Math.floor(Math.random() * 4) + 1 })))
+    const loadHabits = async () => {
+      try {
+        setLoading(true)
+        const habits = await getHabits(true)
+        setHabits(habits)
+      } catch (err) {
+        setError(err.message)
+        setHabits([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadHabits()
   }, [])
 
   const sortedHabits = useMemo(() => {
@@ -26,40 +43,45 @@ export default function FamilyDashboard() {
     })
   }, [habits, sortBy])
 
-  const addHabit = (habitName) => {
+  const addHabit = async (habitName) => {
     const name = habitName || newHabit.trim()
     if (!name) return
-    const newHabitObj = {
-      _id: 'family-local-' + Date.now(),
-      name: name,
-      streak: 0,
-      consistency: 0,
-      completions: 0,
-      members: 1,
-      family: true
+    try {
+      const newHabitObj = await createHabit({ name, family: true })
+      setHabits(prev => [newHabitObj, ...prev])
+      setNewHabit('')
+    } catch (err) {
+      setError(err.message)
     }
-    setHabits(prev => [newHabitObj, ...prev])
-    setNewHabit('')
   }
 
-  const deleteHabit = (id) => {
+  const deleteHabit = async (id) => {
     if (confirm('Remove family habit?')) {
-      setHabits(prev => prev.filter(habit => habit._id !== id))
+      try {
+        await deleteHabit(id)
+        setHabits(prev => prev.filter(habit => habit._id !== id))
+      } catch (err) {
+        setError(err.message)
+      }
     }
   }
 
-  const completeHabit = (id) => {
-    setHabits(prev => prev.map(habit => 
-      habit._id === id 
-        ? { ...habit, streak: habit.streak + 1 }
-        : habit
-    ))
+  const completeHabit = async (id) => {
+    try {
+      await completeHabit(id)
+      // Refresh habits
+      const habits = await getHabits(true)
+      setHabits(habits)
+    } catch (err) {
+      setError(err.message)
+    }
   }
 
   return (
     <>
+      <Navbar />
       <ReminderPopup habits={habits} onDismiss={completeHabit} theme="family" />
-      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 p-4 md:p-8">
+      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 p-4 md:p-8"> 
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-12">
             <div className="flex items-center gap-4">
@@ -75,19 +97,19 @@ export default function FamilyDashboard() {
             </div>
             <div className="flex gap-4">
               <button 
-                onClick={() => window.location.href = '/profile'}
+                onClick={() => router.push('/profile')}
                 className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 text-sm"
               >
                 Profile
               </button>
               <button 
-                onClick={() => window.location.href = '/dashboard'}
+                onClick={() => router.push('/dashboard')}
                 className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 text-sm"
               >
                 Personal
               </button>
               <button 
-                onClick={() => { localStorage.clear(); window.location.href = '/' }}
+                onClick={() => { localStorage.clear(); router.push('/') }}
                 className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 text-sm"
               >
                 Logout

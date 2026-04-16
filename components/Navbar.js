@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 export default function Navbar() {
   const router = useRouter()
   const [user, setUser] = useState(null)
-  const [isPro, setIsPro] = useState(true) // Premium status
 
   useEffect(() => {
     const name = localStorage.getItem('name') || 'User'
@@ -35,47 +34,49 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white/90 backdrop-blur-sm shadow-lg border-b border-gray-200/50 sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-6 py-4">
+      <div className="max-w-6xl Asc mx-auto px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            {/* Premium Profile Avatar */}
+          <div className="flex items-center gap-4 flex-1">
+            {/* Profile Avatar */}
             <div 
               onClick={handleProfileClick}
-              className="w-14 h-14 bg-gradient-to-br from-slate-200 to-gray-100 hover:from-slate-100 hover:to-white rounded-2xl cursor-pointer shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center justify-center p-1 relative group border border-gray-200/50 hover:border-gray-300"
+              className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-slate-200 to-gray-100 hover:from-slate-100 hover:to-white rounded-2xl cursor-pointer shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center justify-center p-1 relative group border border-gray-200/50 hover:border-gray-300 flex-shrink-0"
             >
-{user?.profileImage ? (
+              {user?.profileImage ? (
                 <img 
                   src={user.profileImage} 
                   alt="Profile" 
-                  className="w-full h-full object-cover rounded-xl ring-2 ring-white/30 shadow-sm" 
+                  className="w-full h-full object-cover rounded-xl ring-1 ring-white/30 shadow-sm" 
                 />
               ) : (
-                <span className="text-2xl font-bold text-gray-800 group-hover:scale-110 transition-transform duration-200">
+                <span className="text-xl sm:text-2xl font-bold text-gray-800 group-hover:scale-110 transition-transform duration-200 leading-none">
                   {user?.name?.charAt(0) || 'U'}
                 </span>
               )}
             </div>
 
-            {/* Premium Title Section */}
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold text-gray-900">
+            {/* Title Section */}
+            <div className="space-y-1 min-w-0 flex-1">
+              <div className="truncate">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
                   {user?.name || 'User'}'s Habits
                 </h1>
               </div>
-              <p className="text-sm text-gray-400 font-mono tracking-wider">{getPageTitle()} Dashboard</p>
-              {user?.phone && <p className="text-xs text-gray-500 bg-gray-900/50 px-3 py-1 rounded-full inline-flex items-center gap-1 backdrop-blur-sm">
-                📱 {user.phone}
-              </p>}
+              <p className="text-xs sm:text-sm text-gray-400 font-mono tracking-wide">{getPageTitle()} Dashboard</p>
+              {user?.phone && (
+                <p className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full inline-flex items-center gap-1 hidden sm:inline-flex">
+                  📱 {user.phone}
+                </p>
+              )}
             </div>
           </div>
 
-          {/* Premium Action Buttons */}
-          <div className="flex items-center gap-3">
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 justify-center flex-1">
             {router.pathname !== '/dashboard' && (
               <button
                 onClick={() => router.push('/dashboard')}
-                className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-sm flex items-center gap-2 active:scale-95"
+                className="px-4 py-3 sm:px-6 sm:py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-xs sm:text-sm flex items-center gap-2 active:scale-95 whitespace-nowrap flex-1 min-w-[80px] max-sm:justify-center"
               >
                 📱 Personal
               </button>
@@ -83,20 +84,20 @@ export default function Navbar() {
             {router.pathname !== '/family' && (
               <button
                 onClick={() => router.push('/family')}
-                className="px-6 py-3 bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-sm flex items-center gap-2 active:scale-95"
+                className="px-4 py Asc -3 sm:px-6 sm:py-4 bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-xs sm:text-sm flex items-center gap-2 active:scale-95 whitespace-nowrap flex-1 min-w-[80px] max-sm:justify-center"
               >
                 👨‍👩‍👧 Family
               </button>
             )}
             <button
               onClick={handleProfileClick}
-              className="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-gray-900 font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-sm active:scale-95"
+              className="px-4 py-3 sm:px-6 sm:py-4 bg-amber-500 hover:bg-amber-600 text-gray-900 font-semibold rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-xs sm:text-sm active:scale-95 whitespace-nowrap flex-1 min-w-[80px] max-sm:justify-center"
             >
               👤 Profile
             </button>
             <button
               onClick={handleLogout}
-              className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-sm flex items-center gap-1 active:scale-95"
+              className="px-4 py-3 sm:px-6 sm:py-4 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-xs sm:text-sm flex items-center gap-1 active:scale-95 whitespace-nowrap flex-1 min-w-[80px] max-sm:justify-center"
             >
               🚪 Logout
             </button>
@@ -106,3 +107,4 @@ export default function Navbar() {
     </nav>
   )
 }
+

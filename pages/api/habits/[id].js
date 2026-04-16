@@ -21,6 +21,8 @@ export default async function handler(req, res) {
       if (!habit) {
         return res.status(404).json({ message: 'Habit not found' })
       }
+      // Also delete related completions
+      await Completion.deleteMany({ habitId: id })
       res.status(200).json({ message: 'Habit deleted' })
     } else {
       res.status(405).json({ message: 'Method not allowed' })

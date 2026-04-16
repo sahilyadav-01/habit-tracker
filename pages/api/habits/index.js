@@ -17,7 +17,9 @@ export default async function handler(req, res) {
     const userId = decoded.userId
 
     if (req.method === 'GET') {
-      const habits = await Habit.find({ userId })
+      const { family } = req.query
+      const isFamily = family === 'true'
+      const habits = await Habit.find({ userId, ...(isFamily && { family: true }), ...(!isFamily && { family: { $ne: true } }) })
 
       const habitsWithStats = await Promise.all(habits.map(async (habit) => {
         // Optimize: only recent year needed for streak/consistency
@@ -48,7 +50,7 @@ export default async function handler(req, res) {
       if (!name) {
         return res.status(400).json({ message: 'Name is required' })
       }
-      const habit = new Habit({ userId, name })
+      const habit = new Habit({ ...req.body, userId })
       await habit.save()
       res.status(201).json(habit)
     } else {

@@ -1,15 +1,32 @@
-# Navbar UI Change - Cleaner Design (Completed)
+# Family, Dashboard, Profile Enhancements
 
-## Steps:
-- [x] 1. Update components/Navbar.js: Simplify styles (remove premium classes, gradients, glows, PRO badges; use standard Tailwind shadows/colors)
-- [x] 2. Test changes: npm run dev running at localhost:3000, Navbar cleaner on dashboard/family
-- [x] 3. Verify responsive: Flex layout stacks well on mobile, buttons/hovers work
-- [x] 4. Complete task
+## Approved Plan Steps:
 
-## Changes Summary:
-- Nav: Simple white glass + shadow
-- Avatar: Subtle gray gradient, no PRO badge/shimmer
-- Title: Plain bold text, removed PRO badge
-- Buttons: Flat bg-{blue,pink,amber,gray}-500 hover:-600, rounded-xl, standard shadows/transitions
-- Removed all premium-*, gradients where excessive
-- JSX fixed, logic intact
+✅ **Step 1:** Create this TODO.md for progress tracking
+
+⏳ **Step 2:** Standardize navigation - Replace window.location.href with useRouter().push() in:
+   - pages/family.js
+   - pages/profile.js
+   - pages/dashboard.js (check)
+
+✅ **Step 3:** Backend integration (API calls with auth)
+   - Create shared API utils (lib/api.js) ✅
+   - Update family.js: GET/POST/PATCH/DELETE habits with family:true ✅
+   - Update dashboard.js: habits with family:false ✅
+
+⏳ **Step 4:** Add Navbar component to family/dashboard/profile pages
+
+⏳ **Step 5:** Profile real stats from API data
+
+⏳ **Step 6:** Family enhancements (members display, sharing)
+
+⏳ **Step 7:** Error handling, loading states
+
+⏳ **Step 8:** Test all pages - npm run dev
+   - Check navigation, CRUD habits, family filtering
+   - Mobile responsive
+
+⏳ **Step 9:** Update README.md with features
+
+🔄 **Step 10:** attempt_completion
+

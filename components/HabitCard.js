@@ -4,46 +4,30 @@ export default function HabitCard({ habit, onComplete, onDelete }) {
   const [isCompleting, setIsCompleting] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [localStreak, setLocalStreak] = useState(habit.streak)
-  const [showProgress, setShowProgress] = useState(false)
 
   const handleComplete = () => {
     setLocalStreak(localStreak + 1)
-    
-    // Congrats popup
     if (localStreak >= 7) {
       if (localStreak === 7) alert('⚡ First Week Streak! Amazing!')
       else if (localStreak === 30) alert('🔥 30 Day Legend! Keep going!')
-      else if (localStreak % 7 === 0) alert(`🎉 ${localStreak} Day Streak! Incredible consistency!`)
+      else if (localStreak % 7 === 0) alert(`🎉 ${localStreak} Day Streak!`)
     }
-    
-    setIsCompleting(false)
+    onComplete(habit._id)
   }
 
-  const handleDelete = async () => {
-    if (!confirm('Delete this habit?')) return
-    setIsDeleting(true)
-    try {
-      await onDelete(habit._id)
-    } catch (error) {
-      // Rollback not needed as parent removes
-    } finally {
-      setIsDeleting(false)
+  const handleDelete = () => {
+    if (confirm('Delete this habit?')) {
+      onDelete(habit._id)
     }
   }
 
   const consistencyPercent = Math.min(habit.consistency, 100)
-
-  const getStreakEmoji = (streak) => {
-    if (streak >= 30) return '🔥'
-    if (streak >= 7) return '⚡'
-    if (streak >= 3) return '👍'
-    return '📈'
-  }
+  const getStreakEmoji = (streak) => streak >= 30 ? '🔥' : streak >= 7 ? '⚡' : streak >= 3 ? '👍' : '📈'
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 border-l-4 border-blue-500">
       <div className="flex justify-between items-start mb-4">
-        <h2 className="text-2xl font-bold text-gray-800">{habit.name}</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{habit.name}</h2>
         <span className="text-2xl">{getStreakEmoji(localStreak)}</span>
       </div>
       
@@ -60,7 +44,7 @@ export default function HabitCard({ habit, onComplete, onDelete }) {
           />
         </div>
         <div className="flex justify-between text-sm text-gray-600">
-          <span>Total Completions</span>
+          <span>Total</span>
           <span>{habit.completions}</span>
         </div>
       </div>
@@ -69,7 +53,7 @@ export default function HabitCard({ habit, onComplete, onDelete }) {
         <button 
           onClick={handleComplete}
           disabled={isCompleting || isDeleting}
-          className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-3 px-3 sm:px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
         >
           {isCompleting ? (
             <>
@@ -83,7 +67,7 @@ export default function HabitCard({ habit, onComplete, onDelete }) {
         <button 
           onClick={handleDelete}
           disabled={isCompleting || isDeleting}
-          className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover Asc :to-red-700 text-white font-medium py-3 px-3 sm:px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
         >
           {isDeleting ? 'Deleting...' : 'Delete 🗑️'}
         </button>
@@ -91,3 +75,4 @@ export default function HabitCard({ habit, onComplete, onDelete }) {
     </div>
   )
 }
+
