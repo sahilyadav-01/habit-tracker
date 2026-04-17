@@ -6,15 +6,21 @@ export default function Navbar() {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    const name = localStorage.getItem('name') || 'User'
-    const profileImage = localStorage.getItem('profileImage')
-    const phone = localStorage.getItem('phone') || ''
-    
-    setUser({
-      name: name.charAt(0).toUpperCase() + name.slice(1),
-      profileImage,
-      phone
-    })
+    const updateUser = () => {
+      const name = localStorage.getItem('name') || 'User'
+      const profileImage = localStorage.getItem('profileImage')
+      const phone = localStorage.getItem('phone') || ''
+      
+      setUser({
+        name: name.charAt(0).toUpperCase() + name.slice(1),
+        profileImage,
+        phone
+      })
+    }
+    updateUser()
+    // Listen for storage changes (profile edit)
+    window.addEventListener('storage', updateUser)
+    return () => window.removeEventListener('storage', updateUser)
   }, [])
 
   const handleProfileClick = () => {

@@ -33,61 +33,66 @@ export default function Profile() {
 
     const calculatedAge = new Date().getFullYear() - new Date(dob).getFullYear()
 
-    setUser({
-      name,
-      dob,
-      age: calculatedAge,
-      height,
-      weight,
-      provider: provider === 'google' ? 'Google' : 'Email',
-      joined: new Date().toLocaleDateString(),
-      totalHabits: 12,
-      longestStreak: 47,
-      avgConsistency: 82
-    })
+localStorage.setItem('name', name)
+      localStorage.setItem('provider', provider || 'email')
+      setUser({
+        name,
+        dob,
+        age: calculatedAge,
+        height,
+        weight,
+        provider: provider === 'google' ? 'Google' : 'Email',
+        joined: new Date().toLocaleDateString(),
+        totalHabits: 12,
+        longestStreak: 47,
+        avgConsistency: 82
+      })
 
-    setFormData({
-      name,
-      dob,
-      age: calculatedAge.toString(),
-      height,
-      weight,
-      profileImage: localStorage.getItem('profileImage') || ''
-    })
+      setFormData({
+        name,
+        dob,
+        age: calculatedAge.toString(),
+        height,
+        weight,
+        profileImage: localStorage.getItem('profileImage') || ''
+      })
 
-    setLoading(false)
-  }, [router])
+      setLoading(false)
+    }, [router])
 
   const handleLogout = () => {
     localStorage.clear()
     router.push('/')
   }
 
-  const handleSave = () => {
-    const calculatedAge = new Date().getFullYear() - new Date(formData.dob).getFullYear()
-    
-    localStorage.setItem('name', formData.name)
-    localStorage.setItem('dob', formData.dob)
-    localStorage.setItem('age', calculatedAge.toString())
-    localStorage.setItem('height', formData.height)
-    localStorage.setItem('weight', formData.weight)
-    localStorage.setItem('profileImage', formData.profileImage)
+    const handleSave = () => {
+      const calculatedAge = new Date().getFullYear() - new Date(formData.dob).getFullYear()
+      
+      localStorage.setItem('name', formData.name)
+      localStorage.setItem('dob', formData.dob)
+      localStorage.setItem('age', calculatedAge.toString())
+      localStorage.setItem('height', formData.height)
+      localStorage.setItem('weight', formData.weight)
+      localStorage.setItem('profileImage', formData.profileImage)
 
-    setUser({
-      name: formData.name,
-      dob: formData.dob,
-      age: calculatedAge,
-      height: formData.height,
-      weight: formData.weight,
-      provider: user.provider,
-      joined: user.joined,
-      totalHabits: user.totalHabits,
-      longestStreak: user.longestStreak,
-      avgConsistency: user.avgConsistency
-    })
+      // Trigger storage event for Navbar update
+      window.dispatchEvent(new Event('storage'))
 
-    setEditMode(false)
-  }
+      setUser({
+        name: formData.name,
+        dob: formData.dob,
+        age: calculatedAge,
+        height: formData.height,
+        weight: formData.weight,
+        provider: user.provider,
+        joined: user.joined,
+        totalHabits: user.totalHabits,
+        longestStreak: user.longestStreak,
+        avgConsistency: user.avgConsistency
+      })
+
+      setEditMode(false)
+    }
 
   if (loading) {
     return (
