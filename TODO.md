@@ -1,32 +1,14 @@
-# Family, Dashboard, Profile Enhancements
+# README Update Progress
 
-## Approved Plan Steps:
+## Plan Steps:
+- [x] Step 1: Add MongoDB setup instructions to Quick Start section
+- [x] Step 2: Add Environment Variables section
+- [x] Step 3: Update Future Features list (based on API routes, models)
+- [x] Step 4: Refresh badges and screenshots paths if needed (screenshots ok, badges current)
+- [ ] Step 5: Final review and completion
 
-✅ **Step 1:** Create this TODO.md for progress tracking
+**All steps complete! README.md updated with MongoDB setup, env vars, future features.**
 
-⏳ **Step 2:** Standardize navigation - Replace window.location.href with useRouter().push() in:
-   - pages/family.js
-   - pages/profile.js
-   - pages/dashboard.js (check)
+You can delete this TODO.md if desired.
 
-✅ **Step 3:** Backend integration (API calls with auth)
-   - Create shared API utils (lib/api.js) ✅
-   - Update family.js: GET/POST/PATCH/DELETE habits with family:true ✅
-   - Update dashboard.js: habits with family:false ✅
-
-⏳ **Step 4:** Add Navbar component to family/dashboard/profile pages
-
-⏳ **Step 5:** Profile real stats from API data
-
-⏳ **Step 6:** Family enhancements (members display, sharing)
-
-⏳ **Step 7:** Error handling, loading states
-
-⏳ **Step 8:** Test all pages - npm run dev
-   - Check navigation, CRUD habits, family filtering
-   - Mobile responsive
-
-⏳ **Step 9:** Update README.md with features
-
-🔄 **Step 10:** attempt_completion
 
