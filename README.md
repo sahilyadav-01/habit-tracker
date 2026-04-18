@@ -67,6 +67,12 @@ git clone [your-repo]
 cd habit-tracker
 npm install
 
+# MongoDB Setup (Required for full features)
+# 1. Install MongoDB locally or use MongoDB Atlas
+# 2. Create .env.local:
+#    MONGODB_URI=mongodb://localhost:27017/habittracker
+#       OR your Atlas connection string
+
 # Development
 npm run dev
 
@@ -74,6 +80,7 @@ npm run dev
 npm run build
 npm start
 ```
+
 
 **Live:** `http://localhost:3001`
 
@@ -125,6 +132,14 @@ components/
 └── screenshots      📸 Demo images
 ```
 
+## 🌍 **Environment Variables**
+
+Create `.env.local`:
+```
+MONGODB_URI=mongodb://localhost:27017/habittracker
+# or MongoDB Atlas: mongodb+srv://user:pass@cluster.mongodb.net/habittracker
+```
+
 ## 🔧 **Customization**
 
 ### **Add Profile Image**
@@ -150,12 +165,13 @@ Swipe gestures supported
 
 ## 🎯 **Future Features**
 ```
-[ ] Cloud sync (Supabase)
+[ ] Full user authentication (JWT backend)
+[ ] Family habit sharing & invites
+[ ] Advanced streak analytics charts
+[ ] PWA with offline support
 [ ] Push notifications
-[ ] Habit sharing
-[ ] Analytics charts
-[ ] PWA install
-[ ] Dark mode
+[ ] Dark mode toggle
+[ ] Export progress reports
 ```
 
 ## 🙌 **Demo Flow**
