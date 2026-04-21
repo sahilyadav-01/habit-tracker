@@ -40,7 +40,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white/90 backdrop-blur-sm shadow-lg border-b border-gray-200/50 sticky top-0 z-50">
-      <div className="max-w-6xl Asc mx-auto px-4 sm:px-6 py-4">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4 flex-1">
             {/* Profile Avatar */}
@@ -90,7 +90,7 @@ export default function Navbar() {
             {router.pathname !== '/family' && (
               <button
                 onClick={() => router.push('/family')}
-                className="px-4 py Asc -3 sm:px-6 sm:py-4 bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-xs sm:text-sm flex items-center gap-2 active:scale-95 whitespace-nowrap flex-1 min-w-[80px] max-sm:justify-center"
+                className="px-4 py-3 sm:px-6 sm:py-4 bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-300 text-xs sm:text-sm flex items-center gap-2 active:scale-95 whitespace-nowrap flex-1 min-w-[80px] max-sm:justify-center"
               >
                 👨‍👩‍👧 Family
               </button>

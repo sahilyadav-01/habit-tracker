@@ -1,8 +1,11 @@
 import { useState } from 'react'
 
-export default function HabitCard({ habit, onComplete, onDelete }) {
+export default function HabitCard({ habit, onComplete, onDelete, onEdit }) {
   const [isCompleting, setIsCompleting] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editName, setEditName] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
   const [localStreak, setLocalStreak] = useState(habit.streak)
 
   const handleComplete = () => {
@@ -13,6 +16,32 @@ export default function HabitCard({ habit, onComplete, onDelete }) {
       else if (localStreak % 7 === 0) alert(`🎉 ${localStreak} Day Streak!`)
     }
     onComplete(habit._id)
+  }
+
+  const handleEdit = () => {
+    setEditName(habit.name)
+    setIsEditing(true)
+  }
+
+  const handleSaveEdit = async () => {
+    if (!editName.trim() || editName === habit.name) {
+      setIsEditing(false)
+      return
+    }
+    if (!onEdit) return
+    setIsSaving(true)
+    try {
+      await onEdit(habit._id, { name: editName.trim() })
+    } catch (err) {
+      alert('Update failed')
+    }
+    setIsEditing(false)
+    setIsSaving(false)
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditing(false)
+    setEditName('')
   }
 
   const handleDelete = () => {
@@ -27,7 +56,20 @@ export default function HabitCard({ habit, onComplete, onDelete }) {
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 border-l-4 border-blue-500">
       <div className="flex justify-between items-start mb-4">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{habit.name}</h2>
+        {isEditing ? (
+          <input
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSaveEdit()
+              if (e.key === 'Escape') handleCancelEdit()
+            }}
+            className="flex-1 p-2 border-2 border-blue-300 rounded-lg focus:border-blue-500 focus:outline-none text-xl font-bold bg-blue-50 min-w-0"
+            autoFocus
+          />
+        ) : (
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{habit.name}</h2>
+        )}
         <span className="text-2xl">{getStreakEmoji(localStreak)}</span>
       </div>
       
@@ -49,11 +91,11 @@ export default function HabitCard({ habit, onComplete, onDelete }) {
         </div>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         <button 
           onClick={handleComplete}
-          disabled={isCompleting || isDeleting}
-          className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-3 px-3 sm:px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
+          disabled={isCompleting || isDeleting || isEditing || isSaving}
+          className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
         >
           {isCompleting ? (
             <>
@@ -64,13 +106,40 @@ export default function HabitCard({ habit, onComplete, onDelete }) {
             'Mark Done ✅'
           )}
         </button>
-        <button 
-          onClick={handleDelete}
-          disabled={isCompleting || isDeleting}
-          className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover Asc :to-red-700 text-white font-medium py-3 px-3 sm:px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-        >
-          {isDeleting ? 'Deleting...' : 'Delete 🗑️'}
-        </button>
+        {isEditing ? (
+          <>
+            <button 
+              onClick={handleSaveEdit}
+              disabled={isSaving || !editName.trim()}
+              className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all disabled:opacity-50 text-sm flex items-center gap-1"
+            >
+              {isSaving ? 'Saving...' : 'Save 💾'}
+            </button>
+            <button 
+              onClick={handleCancelEdit}
+              disabled={isSaving}
+              className="bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white font-medium py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all disabled:opacity-50 text-sm"
+            >
+              Cancel
+            </button>
+          </>
+        ) : (
+          <>
+            <button 
+              onClick={handleEdit}
+              className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-medium py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-sm flex items-center gap-1"
+            >
+              Edit ✏️
+            </button>
+            <button 
+              onClick={handleDelete}
+              disabled={isCompleting || isEditing || isSaving}
+              className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm flex items-center"
+            >
+              Delete 🗑️
+            </button>
+          </>
+        )}
       </div>
     </div>
   )

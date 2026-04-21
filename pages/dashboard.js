@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import HabitCard from '../components/HabitCard'
 import ReminderPopup from '../components/ReminderPopup'
 import HabitSuggestion from '../components/HabitSuggestion'
-import { getHabits, createHabit, completeHabit, deleteHabit } from '../lib/api'
+import { getHabits, createHabit, completeHabit, deleteHabit, updateHabit } from '../lib/api'
 import { demoHabits } from '../components/DemoData'
 import { motion, AnimatePresence } from 'framer-motion' // Assume installed or remove if not
 
@@ -79,6 +79,16 @@ export default function PersonalDashboard() {
       setHabits(habits)
     } catch (err) {
       setError(err.message)
+    }
+  }
+
+  const editHabit = async (id, updates) => {
+    try {
+      const updatedHabit = await updateHabit(id, updates)
+      setHabits(prev => prev.map(h => h._id === id ? updatedHabit : h))
+    } catch (err) {
+      setError(err.message)
+      throw err
     }
   }
 
@@ -228,6 +238,7 @@ export default function PersonalDashboard() {
                       habit={habit}
                       onComplete={completeHabit}
                       onDelete={deleteHabit}
+                      onEdit={editHabit}
                     />
                   </motion.div>
                 ))}
